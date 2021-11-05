@@ -1,5 +1,5 @@
 from data_loader import load_data, tokenizer
-from models import BertForMultipleSequenceClassification
+from models import BertForMultipleLabelSequenceClassification
 
 from transformers import AutoConfig
 import torch
@@ -38,7 +38,7 @@ def eval(model, eval_dataloader, metric, device):
             outputs = model(**batch)
         
         logits = outputs.logits
-        predictions = torch.stack([torch.argmax(logit, dim=-1) for logit in logits], dim=1)
+        predictions = torch.argmax(logits, dim=-1)
         preds.append(predictions)
         targets.append(batch["labels"])
 
@@ -49,7 +49,7 @@ def eval(model, eval_dataloader, metric, device):
     for i in range(M):
         print("%d results" % (i+1))
         acc = accuracy_score(targets[:,i], preds[:,i])
-        f1 = f1_score(targets[:,i], preds[:,i], average='binari')
+        f1 = f1_score(targets[:,i], preds[:,i], average='binary')
 
         print('accuracy', acc * 100)
         print('f1 score', f1 * 100)
@@ -62,8 +62,7 @@ def main():
     checkpoint = "klue/bert-base"
     train_dataloader, eval_dataloader = load_data()
     config = AutoConfig.from_pretrained(checkpoint)
-    config.num_classes=[2] * 10
-    model = BertForMultipleSequenceClassification.from_pretrained(checkpoint, config=config)
+    model = BertForMultipleLabelSequenceClassification.from_pretrained(checkpoint, num_labels=10)
     
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     model.to(device)
