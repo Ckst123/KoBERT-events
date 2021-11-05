@@ -49,7 +49,7 @@ def eval(model, eval_dataloader, metric, device):
     for i in range(M):
         print("%d results" % (i+1))
         acc = accuracy_score(targets[:,i], preds[:,i])
-        f1 = f1_score(targets[:,i], preds[:,i], average='binari')
+        f1 = f1_score(targets[:,i], preds[:,i], average='binary')
 
         print('accuracy', acc * 100)
         print('f1 score', f1 * 100)
