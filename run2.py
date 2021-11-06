@@ -8,6 +8,7 @@ from transformers import get_scheduler
 from transformers import AdamW
 from sklearn.metrics import accuracy_score, f1_score
 
+label_list = ['확진자수','완치자수','사망여부','집단감염','백신관련','방역지침','경제지원','마스크','국제기구','병원관련']
 
 def train(model, optimizer, lr_scheduler, train_dataloader, num_epochs, num_training_steps, device):
     
@@ -47,7 +48,7 @@ def eval(model, eval_dataloader, metric, device):
     targets = torch.cat(targets, dim=0).cpu().numpy()
     N, M = preds.shape
     for i in range(M):
-        print("%d results" % (i+1))
+        print("%s results" % label_list[i])
         acc = accuracy_score(targets[:,i], preds[:,i])
         f1 = f1_score(targets[:,i], preds[:,i], average='binary')
 
