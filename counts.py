@@ -15,4 +15,12 @@ if __name__ == '__main__':
             print(l, ':', c, end=' ')
         print()
     
-
+    data = pd.read_csv('test.csv')
+    data = data[label_list].dropna()
+    print('total counts:', len(data))
+    for lab in label_list:
+        print(lab)
+        lab, counts = np.unique(data[lab], return_counts=True)
+        for l, c in zip(lab, counts):
+            print(l, ':', c, end=' ')
+        print()
