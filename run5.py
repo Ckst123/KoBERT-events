@@ -45,21 +45,19 @@ def eval(model, eval_dataloader, metric, device):
 
     preds = torch.cat(preds, dim=0).cpu().numpy()
     targets = torch.cat(targets, dim=0).cpu().numpy()
-    N, M = preds.shape
-    for i in range(M):
-        print("%d results" % (i+1))
-        acc = accuracy_score(targets[:,i], preds[:,i])
-        f1 = f1_score(targets[:,i], preds[:,i], average='binary')
 
-        print('accuracy', acc * 100)
-        print('f1 score', f1 * 100)
+    acc = accuracy_score(targets[:, 0], preds[:, 0])
+    f1 = f1_score(targets[:, 0], preds[:, 0], average='binary')
+    
+    print('accuracy', acc * 100)
+    print('f1 score', f1 * 100)
 
 
 def main():
     checkpoint = "klue/bert-base"
     train_dataloader, eval_dataloader = load_data_with_total_binary()
     config = AutoConfig.from_pretrained(checkpoint)
-    model = BertForMultipleLabelSequenceClassification.from_pretrained(checkpoint, num_labels=10)
+    model = BertForMultipleLabelSequenceClassification.from_pretrained(checkpoint, num_labels=1)
     
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     model.to(device)
