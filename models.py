@@ -193,7 +193,7 @@ class FocalCrossEntropyLoss(nn.Module):
         targets_one_hot = torch.zeros_like(prob) 
         targets_one_hot.scatter_(1, targets.unsqueeze(1), 1)
         w = torch.pow(1. - prob, self.gamma)
-        focal = - w * torch.log(prob + 1e-8)
+        focal = - w * targets_one_hot *torch.log(prob + 1e-8)
         focal = focal.sum(dim=-1)
         return focal
 
